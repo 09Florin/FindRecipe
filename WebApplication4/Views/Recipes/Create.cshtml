@@ -1,0 +1,160 @@
+﻿@model WebApplication4.Models.Recipe
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+    <div>
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <!-- Category Dropdown -->
+    <div>
+        <label>Select Category</label>
+        <select id="categoryDropdown" class="form-control" onchange="fetchIngredients(this.value)">
+            <option value="">Select Category</option>
+            @if (ViewBag.Categories != null)
+            {
+                foreach (var category in ViewBag.Categories)
+                {
+                    <option value="@category.CategoryId">@category.Name</option>
+                }
+            }
+            else
+            {
+                <option value="">No categories available</option>
+            }
+        </select>
+    </div>
+
+    <!-- Ingredients container, initially empty -->
+    <div id="ingredientsContainer"></div>
+
+    <!-- List of selected ingredients -->
+    <div id="selectedIngredients">
+        <h4>Selected Ingredients:</h4>
+        <ul id="ingredientList"></ul>
+    </div>
+
+    <!-- Recipe Steps Section -->
+    <div id="stepsContainer">
+        <label>Recipe Steps</label>
+    </div>
+    <div>
+        <label>Steps</label>
+        <div id="steps-container">
+            <!-- Placeholder for dynamically added steps -->
+        </div>
+        <button type="button" onclick="addStep()">Add Step</button>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Recipe</button>
+</form>
+
+@section Scripts {
+    <script>
+        let stepIndex = 0;
+
+        function addStep() {
+            const container = document.getElementById("steps-container");
+            const input = document.createElement("input");
+
+            input.name = `Steps[${stepIndex}]`; // Set the input name to follow array naming conventions
+            input.placeholder = `Step ${stepIndex + 1}`;
+            input.className = "form-control mb-2";
+
+            container.appendChild(input);
+            stepIndex++;
+        }
+
+        // Fetch ingredients based on category selection
+        function fetchIngredients(categoryId) {
+            if (!categoryId) {
+                document.getElementById("ingredientsContainer").innerHTML = '';
+                return;
+            }
+
+            // AJAX request to fetch ingredients by category
+            fetch(`/Recipes/GetIngredientsByCategory?categoryId=${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById("ingredientsContainer");
+                    container.innerHTML = ''; // Clear previous ingredients
+
+                    if (data.length > 0) {
+                        data.forEach(ingredient => {
+                            const div = document.createElement("div");
+                            div.classList.add("ingredient-item");
+                            div.innerHTML = `
+                                        <img src="${ingredient.photoPath}" alt="${ingredient.name}" class="ingredient-img" />
+                                        <p>${ingredient.name}</p>
+                                    `;
+                            div.onclick = () => addIngredient(ingredient); // Attach click event to add ingredient
+                            container.appendChild(div);
+                        });
+                    } else {
+                        container.innerHTML = '<p>No ingredients available for this category.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching ingredients:", error);
+                });
+        }
+
+        // Add ingredient to the selected ingredients list
+        function addIngredient(ingredient) {
+            const ul = document.getElementById("ingredientList");
+            const li = document.createElement("li");
+            li.textContent = ingredient.name;
+            ul.appendChild(li);
+
+            // Add hidden input to store ingredient ID in form
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "ingredientIds";  // Name to bind on form submission
+            input.value = ingredient.ingredientId; // Add the ingredient ID
+            ul.appendChild(input);
+        }
+    </script>
+}
+
+<style>
+    /* Style the ingredients container */
+    #ingredientsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .ingredient-item {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 8px;
+        width: 150px;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .ingredient-item:hover {
+            transform: scale(1.05);
+        }
+
+        .ingredient-item img {
+            max-width: 100%; /* Ensure the image doesn't overflow */
+            height: auto; /* Maintain aspect ratio */
+            max-height: 100px; /* Restrict the height of images */
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .ingredient-item p {
+            font-size: 14px;
+            color: #333;
+            margin-top: 5px;
+        }
+</style>

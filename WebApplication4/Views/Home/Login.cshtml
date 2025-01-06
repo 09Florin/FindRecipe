@@ -1,0 +1,40 @@
+﻿
+@{
+    Layout = null;
+}
+@model WebApplication4.Models.LoginViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="../css/Registration.css" />
+</head>
+<body>
+    <div class="container">
+        <form class="form" method="post" asp-controller="Home" asp-action="Login">
+            <h1 class="form-title">Login</h1>
+            <div class="form-group">
+                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control" required>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" type="password" required>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <href>Don't have an account yet?'</href>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Registration">Register now!</a>
+            </li>
+        </form>
+    </div>
+    <br />
+    <br />
+    <br />
+</body>
+</html>

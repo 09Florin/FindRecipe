@@ -1,0 +1,19 @@
+﻿@model IEnumerable<WebApplication4.Models.RecipeIngredient>
+
+<table>
+    <thead>
+        <tr>
+            <th>Recipe</th>
+            <th>Ingredient</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Recipe.Title</td>
+                <td>@item.Ingredient.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

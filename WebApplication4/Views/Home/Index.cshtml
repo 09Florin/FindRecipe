@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    bool isAdmin = ViewData["IsAdmin"] != null && (bool)ViewData["IsAdmin"];
+}
+
+<div class="container py-5">
+    <!-- Welcome Section -->
+    <div class="text-center mb-4">
+        <h1 class="display-4">Welcome to the greatest recipe hub, bon apettit! </h1>
+    </div>
+
+    <hr style="border-color: #e0e0e0;" />
+
+    <!-- Search Cards Grid -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Search by Recipe Name -->
+            <div class="col-md-6 mb-4">
+                <div class="card-recipe-by-name shadow bg-dark text-light">
+                    <div class="card-body">
+                        <p class="lead text-center">
+                            From appetizers to main courses and desserts, let us simplify your cooking journey.
+                            <span style="font-weight: bold; color: #6f42c1;"> Do you already have a dish in mind?</span> Perhaps a family favorite, a recipe you saw online, or something you’ve been craving? Simply <span style="font-weight: bold; color: #ff6f61;">type the name of the recipe in the search field below, </span>
+                            and we’ll do the rest. Whether it’s a classic dish like lasagna, a trending dessert like tiramisu, or a quick and easy dinner idea, <span style="font-weight: bold; color: #17a2b8;">our database is here to help you locate the exact recipe you need.</span>
+                        </p>
+                        <h5 class="card-title text-warning">Search Recipes by Name</h5>
+                        <form asp-action="SearchByRecipeName" asp-controller="Recipes" method="get">
+                            <div class="input-group">
+                                <input class="form-control" type="text" name="recipeName" placeholder="Search recipes by name">
+                                <button class="btn btn-warning" type="submit">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+           
+
+            <!-- Search by Ingredient -->
+            <div class="col-md-6 mb-4">
+                <div class="card-recipe-by-ingredient shadow bg-dark text-light">
+                    <div class="card-body">
+                        <p class="lead text-center">
+                            In today’s world, <span style="font-weight: bold; color: #e74c3c;">food waste</span>  has become one of the most pressing issues impacting our environment, economy, and society. Every year, <span style="font-weight: bold; color: #6f42c1;"> billions of tons</span> of perfectly good food go to waste, even as millions of people face hunger and food insecurity. This waste not only represents lost opportunities to <span style="font-weight: bold; color: #2ecc71;">feed those in need</span> but also significantly contributes to the climate crisis.
+
+                            Discarded food generates methane, a powerful greenhouse gas, as it decomposes in landfills. Shockingly, food waste is responsible for nearly 10% of global greenhouse gas emissions. In a time when the planet is grappling with record temperatures, <span style="font-weight: bold; color: #e74c3c;">extreme weather events</span>, and dwindling natural resources, reducing food waste is not just a personal responsibility but a global necessity.
+
+                            <span style="font-weight: bold; color: #28a745;">By minimizing food waste, we can reduce the strain on our agricultural systems, conserve water, and lower carbon emissions, all while fostering a more sustainable and equitable food system.</span>
+
+                            That’s where we come in. We want to help you take small but meaningful steps toward solving this problem. <span style="font-weight: bold; color: #3498db;">Enter an ingredient you have at home</span>, something that might otherwise go unused—and we’ll find a recipe to transform it into something delicious. Together, we can fight food waste, one meal at a time. Join us in making a difference!
+                        </p>
+                        <h5 class="card-title text-warning">Search Recipes by Ingredient</h5>
+                        <form asp-action="SearchByIngredients" asp-controller="Recipes" method="get">
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="ingredientSearch" name="ingredientName" placeholder="Enter ingredient" autocomplete="off">
+                                <button class="btn btn-warning" type="submit">Search</button>
+                            </div>
+                            <div id="suggestionsDropdown" class="dropdown-menu" style="width: 100%;"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Logout Buttons -->
+    <div class="d-flex justify-content-center mb-4">
+        @if (ViewData["IsUserLoggedIn"] != null && (bool)ViewData["IsUserLoggedIn"])
+        {
+            <a class="btn btn-danger btn-lg me-2" asp-controller="Home" asp-action="Logout">Log Out</a>
+        }
+        else
+        {
+            <a class="btn btn-success btn-lg me-2" asp-controller="Home" asp-action="Login">Login</a>
+        }
+    </div>
+    <!-- Admin Section -->
+    @if (isAdmin)
+    {
+        <div class="text-center mt-4">
+            <a href="@Url.Action("AdminProfile", "Home")" class="btn btn-warning btn-lg">Admin Profile</a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        const inputField = document.getElementById("ingredientSearch");
+        const suggestionsDropdown = document.getElementById("suggestionsDropdown");
+
+        inputField.addEventListener("input", function () {
+            const query = inputField.value.trim();
+
+            // Clear previous suggestions
+            suggestionsDropdown.innerHTML = "";
+            if (query.length < 2) return; // Start fetching suggestions after 2 characters
+
+            fetch(`/Recipes/GetIngredientSuggestions?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        data.forEach(ingredient => {
+                            const option = document.createElement("a");
+                            option.className = "dropdown-item";
+                            option.textContent = ingredient;
+                            option.onclick = function () {
+                                inputField.value = ingredient; // Set selected ingredient
+                                suggestionsDropdown.innerHTML = ""; // Clear dropdown
+                            };
+                            suggestionsDropdown.appendChild(option);
+                        });
+                        suggestionsDropdown.classList.add("show"); // Show dropdown
+                    } else {
+                        suggestionsDropdown.classList.remove("show"); // Hide if no results
+                    }
+                })
+                .catch(error => console.error("Error fetching suggestions:", error));
+        });
+
+        // Hide dropdown when clicking outside
+        document.addEventListener("click", function (e) {
+            if (!suggestionsDropdown.contains(e.target) && e.target !== inputField) {
+                suggestionsDropdown.classList.remove("show");
+            }
+        });
+    </script>
+}

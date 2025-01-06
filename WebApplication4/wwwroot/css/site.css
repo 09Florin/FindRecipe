@@ -1,0 +1,159 @@
+/* General Reset and Base Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #fff8e1; /* Warm light cream, evoking parchment or bread */
+    color: #333; /* Dark gray text for good contrast */
+    margin-bottom: 60px;
+}
+
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Navbar Styling */
+.navbar {
+    background: linear-gradient(90deg, #82b74b, #fbbd08); /* Green to golden yellow gradient */
+    color: #fff;
+}
+
+    .navbar .navbar-brand {
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .navbar .nav-link {
+        color: #fff;
+        margin: 0 10px;
+        transition: color 0.3s ease;
+    }
+
+        .navbar .nav-link:hover {
+            color: #ffe0b2; /* Light orange on hover */
+        }
+
+    .navbar .btn {
+        border-radius: 20px; /* Rounded buttons */
+        padding: 5px 15px;
+        background-color: #ff7043; /* Accent orange */
+        border: none;
+        color: #fff;
+    }
+
+        .navbar .btn:hover {
+            background-color: #e64a19; /* Slightly darker orange */
+        }
+
+/* Button Styling */
+.btn-primary {
+    background-color: #82b74b; /* Warm green */
+    border: none;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #689f38; /* Darker green */
+    }
+
+/* Footer Styling */
+footer {
+    background-color: #82b74b;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+
+    footer a {
+        color: #ff7043;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+        footer a:hover {
+            text-decoration: none;
+        }
+
+/* Main Content Styling */
+.container {
+    margin-top: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fbbd08; /* Golden Yellow */
+}
+
+/* Favorite Recipes List */
+.list-group-item {
+    background-color: #fef9e7; /* Light yellow for food context */
+    border: 1px solid #fbbd08; /* Golden border */
+}
+
+    .list-group-item a {
+        color: #333;
+    }
+
+        .list-group-item a:hover {
+            color: #ff7043; /* Orange on hover */
+        }
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+    }
+
+        .navbar .nav-link {
+            margin: 5px 0;
+        }
+
+    .btn {
+        font-size: 0.9rem;
+    }
+}
+
+/* Center and style buttons */
+.btn {
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 12px 24px;
+}
+
+/* Ensure card images scale correctly */
+.card-recipe-by-ingredient {
+    position: relative;
+    overflow: hidden;
+    height: 1000px;
+    border-radius: 12px;
+}
+
+.card-recipe-by-name {
+    position: relative;
+    overflow: hidden;
+    height: 450px;
+    border-radius: 12px;
+}
+
+.card-img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    filter: brightness(75%);
+}
+
+.card-img-overlay {
+    background-color: rgba(0, 0, 0, 0.4); /* Slight overlay to improve text visibility */
+    border-radius: 12px;
+    padding: 16px;
+}
+
+input.form-control-lg {
+    border: 2px solid #fff;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    padding: 10px;
+    border-radius: 8px;
+}
+

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<WebApplication4.Models.Recipe>
+
+<h2>Search Results</h2>
+
+<div class="recipe-list">
+    <h3>Found Recipes:</h3>
+
+    @if (Model.Any())
+    {
+        <div class="recipe-cards-container">
+            @foreach (var recipe in Model)
+            {
+                <div class="recipe-card">
+                    <a href="@Url.Action("Details", "Recipes", new { id = recipe.RecipeId })">
+                        <div class="card-header">
+                            <h4>@recipe.Title</h4>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No recipes found matching your search.</p>
+    }
+</div>
+
+<!-- CSS for styling the recipe cards -->
+<style>
+    .recipe-list {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .recipe-cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .recipe-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #4CAF50; /* Green background color */
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .recipe-card:hover {
+            transform: scale(1.05);
+        }
+
+    .card-header {
+        text-align: center;
+    }
+
+        .card-header h4 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            color: white; /* White text on green background */
+        }
+
+    .recipe-card a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .recipe-list p {
+        font-size: 16px;
+        color: #777;
+        margin-top: 20px;
+    }
+</style>

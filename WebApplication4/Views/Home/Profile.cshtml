@@ -1,0 +1,34 @@
+﻿@model WebApplication4.Models.User
+
+<h1>User Profile</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">@Model.FirstName @Model.LastName</h3>
+        <p><strong>Username:</strong> @Model.Username</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Birthday:</strong> @Model.Birthday.ToShortDateString()</p>
+        <p><strong>City:</strong> @Model.City</p>
+    </div>
+</div>
+
+<h2>Favorite Recipes</h2>
+@if (Model.FavorteRecipes != null && Model.FavorteRecipes.Any())
+{
+    <ul class="list-group">
+        @foreach (var recipe in Model.FavorteRecipes)
+        {
+            <li class="list-group-item">
+                <a asp-controller="Recipes" asp-action="Details" asp-route-id="@recipe.RecipeId">@recipe.Title</a>
+                <form asp-controller="Recipes" asp-action="RemoveFromFavorites" method="post" class="ml-3">
+                    <input type="hidden" name="recipeId" value="@recipe.RecipeId" />
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no favorite recipes.</p>
+}

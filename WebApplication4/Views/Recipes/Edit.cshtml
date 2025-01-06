@@ -1,0 +1,63 @@
+﻿@model WebApplication4.Models.Recipe
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="RecipeId" />
+
+    <div>
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div>
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <!-- Steps Section -->
+    <div>
+        <label>Steps</label>
+        <div id="steps-container">
+            @for (int i = 0; i < Model.Steps.Count; i++)
+            {
+                <div class="step-item mb-2" data-index="@i">
+                    <input name="Steps[@i]" value="@Model.Steps[i]" class="form-control" placeholder="Step @(i + 1)" />
+                    <button type="button" class="btn btn-danger btn-sm mt-1" onclick="removeStep(this)">Remove</button>
+                </div>
+            }
+        </div>
+        <button type="button" id="addStepBtn" class="btn btn-primary btn-sm mt-3">Add Step</button>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        let stepIndex = @Model.Steps.Count;
+
+        // Add a new step input
+        document.getElementById("addStepBtn").addEventListener("click", function () {
+            const container = document.getElementById("steps-container");
+            const div = document.createElement("div");
+            div.classList.add("step-item", "mb-2");
+            div.dataset.index = stepIndex;
+
+            div.innerHTML = `
+                        <input name="Steps[${stepIndex}]" class="form-control" placeholder="Step ${stepIndex + 1}" />
+                        <button type="button" class="btn btn-danger btn-sm mt-1" onclick="removeStep(this)">Remove</button>
+                    `;
+
+            container.appendChild(div);
+            stepIndex++;
+        });
+
+        // Remove a step input
+        function removeStep(button) {
+            const stepItem = button.parentElement;
+            stepItem.remove();
+        }
+    </script>
+}
